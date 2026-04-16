@@ -54,7 +54,7 @@ describe('Goal component', () => {
         renderGoal();
         expect(screen.getByText('📚')).toBeInTheDocument();
         expect(screen.getByText('Read 12 books')).toBeInTheDocument();
-        expect(screen.getByText('/yearly')).toBeInTheDocument();
+        expect(screen.getByText('yearly')).toBeInTheDocument();
     });
 
     it('renders "Completed" button', () => {
@@ -64,22 +64,21 @@ describe('Goal component', () => {
 
     it('shows correct completed count', () => {
         renderGoal();
-        expect(screen.getByTestId('completed-count')).toHaveTextContent('3 of 12');
+        expect(screen.getByTestId('completed-count')).toHaveTextContent('3/12');
     });
 
     it('renders progress bar with correct percentage', () => {
         renderGoal();
-        const bar = screen.getByRole('progressbar');
-        expect(bar).toBeInTheDocument();
+        // role="progressbar" is on the fill element itself
+        const fill = screen.getByRole('progressbar');
+        expect(fill).toBeInTheDocument();
         // 3/12 = 25%
-        const fill = bar.firstChild as HTMLElement;
         expect(fill).toHaveStyle({ width: '25%' });
     });
 
     it('clamps progress to 100% when completed exceeds goal', () => {
         renderGoal({ ...mockGoal, completed: 15 });
-        const bar = screen.getByRole('progressbar');
-        const fill = bar.firstChild as HTMLElement;
+        const fill = screen.getByRole('progressbar');
         expect(fill).toHaveStyle({ width: '100%' });
     });
 

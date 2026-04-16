@@ -4,6 +4,8 @@ import { AuthContext } from "../../../memory/Context.tsx";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../services/Auth.ts";
 
+const DEMO_CREDENTIALS = { username: 'example@gmail.com', password: '12345' };
+
 function Access() {
     const navigate = useNavigate();
     const [, authDispatch] = useContext(AuthContext);
@@ -16,8 +18,8 @@ function Access() {
             localStorage.setItem('authToken', tokenObject.token);
             authDispatch({ type: 'add', token: tokenObject });
             navigate('/list');
-        } catch (err) {
-            setError('Invalid email or password.');
+        } catch {
+            setError('Invalid email or password. Try the demo button below.');
         }
     };
 
@@ -31,6 +33,7 @@ function Access() {
             button2="Sign up"
             url="/register"
             error={error}
+            demoCredentials={DEMO_CREDENTIALS}
         />
     );
 }

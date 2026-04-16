@@ -1,21 +1,93 @@
-@reference "tailwindcss";
-
 .header {
-    @apply h-14 flex justify-between items-center shadow bg-white text-gray-700 relative;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-xs);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex-shrink: 0;
 }
 
-.titleContainer {
-    @apply flex items-center pl-4;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
 }
 
-.title {
-    @apply ml-2 flex uppercase font-semibold text-gray-800;
+.brandMark {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    flex-shrink: 0;
 }
 
-.icon {
-    @apply h-8;
+.brandName {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.brandName span {
+    color: var(--primary);
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .logout {
-    @apply cursor-pointer hover:text-red-600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.logout:hover {
+    background: #fef2f2;
+    color: var(--danger);
+    border-color: var(--danger-border);
+}
+
+.mobileNewGoal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 300;
+    transition: background var(--transition-fast);
+}
+.mobileNewGoal:hover {
+    background: #ddd6fe;
 }

@@ -1,66 +1,45 @@
-import HeaderCss from "./Header.module.css";
-import GoalsAppIcon from "../../img/GoalsAppIcon.svg";
-import profileIcon from "../../img/profile.svg";
-import LinkTo from "./LinkTo";
+import styles from "./Header.module.css";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../memory/Context.tsx";
 import { useNavigate } from "react-router-dom";
-import NewGoalIcon from "../../img/newgoal.svg";
 
 function Header() {
-
     const [authState, authDispatch] = useContext(AuthContext);
     const navigate = useNavigate();
-
     const isAuthenticated = !!authState.authenticate;
 
     const handleLogout = () => {
-        // 1. Ejecutar la acción 'logout' (que borra localStorage)
         authDispatch({ type: 'logout' });
-
-        // 2. Redirigir al usuario a la página pública
         navigate('/access');
     };
 
     return (
-        <header className={HeaderCss.header}>
-            <div className={HeaderCss.titleContainer}>
-                <img
-                    className={HeaderCss.icon}
-                    src={GoalsAppIcon}
-                    alt="Descripción del icono"
-                />
-                <a className={HeaderCss.title} href="/goals">
-                    Goals app
-                </a>
+        <header className={styles.header}>
+            <Link to={isAuthenticated ? "/list" : "/access"} className={styles.brand}>
+                <div className={styles.brandMark}>🎯</div>
+                <span className={styles.brandName}>
+                    Goals<span>App</span>
+                </span>
+            </Link>
+
+            <div className={styles.right}>
+                {isAuthenticated && (
+                    <>
+                        <Link to="/create" className={styles.mobileNewGoal + " md:hidden"} aria-label="New goal">
+                            +
+                        </Link>
+                        <button onClick={handleLogout} className={styles.logout}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Log out
+                        </button>
+                    </>
+                )}
             </div>
-            {isAuthenticated && (
-                <>
-                    <div className="md:hidden">
-
-                        <LinkTo
-                            to="/create"
-                            // Clase de Tailwind para ocultar en md: y superiores
-                            className="md:hidden flex items-center p-2 rounded-3xl hover:bg-gray-200"
-                        >
-                            <img
-                                className="h-6 w-6" // Estilos simplificados para el icono
-                                src={NewGoalIcon}
-                                alt="Create Goal Icon"
-                            />
-                        </LinkTo>
-                    </div>
-
-                    <button onClick={handleLogout}
-                        className={HeaderCss.logout}>Logout</button>
-
-                </>
-            )}
-            <nav>
-                <LinkTo to="/profile">
-                    <img className={HeaderCss.icon} src={profileIcon} />
-                </LinkTo>
-            </nav>
         </header>
     );
 }

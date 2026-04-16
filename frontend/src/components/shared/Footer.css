@@ -1,5 +1,28 @@
-@reference "tailwindcss";
-
 .footer {
-    @apply flex shadow justify-end items-center h-8 bg-gradient-to-r from-pink-400 to-purple-500 bg-gray-100 text-white relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--sidebar-bg);
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+.footer small {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    color: #475569;
+    letter-spacing: 0.01em;
+}
+
+.footer a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 200ms ease;
+}
+
+.footer a:hover {
+    color: #818cf8;
 }

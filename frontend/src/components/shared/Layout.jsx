@@ -4,17 +4,19 @@ import { Outlet } from "react-router-dom";
 import LayoutCss from "./Layout.module.css";
 import Aside from "./Aside.jsx";
 
-function Layout({privateRoute}) {
+function Layout({ privateRoute }) {
     return (
         <>
-            <Header></Header>
+            <Header />
             <main className={LayoutCss.mainContainer}>
-                {privateRoute && <Aside/>}
+                {privateRoute && <Aside />}
                 <section className={LayoutCss.main}>
-                    <Outlet></Outlet>
+                    <div className={privateRoute ? LayoutCss.mainInner : ""}>
+                        <Outlet />
+                    </div>
                 </section>
             </main>
-            <Footer></Footer>
+            <Footer />
         </>
     );
 }

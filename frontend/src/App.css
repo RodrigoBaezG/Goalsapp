@@ -1,47 +1,140 @@
 @import "tailwindcss";
 @reference "tailwindcss";
 
+/* ─── Global Card ─────────────────────────────────────────────── */
 .card {
-    @apply w-4/5 pt-2 mb-3 md:w-4/5 text-gray-700 text-xs mx-4 rounded-xl bg-white overflow-hidden;
-    border: 1px solid var(--color-border);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow var(--transition-base), transform var(--transition-fast);
 }
-
 .card:hover {
     box-shadow: var(--shadow-md);
 }
 
+/* ─── Buttons ─────────────────────────────────────────────────── */
 .button {
-    @apply inline-flex items-center justify-center gap-1 px-4 py-2 font-medium text-sm rounded-3xl cursor-pointer transition-all duration-150;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 16px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 13.5px;
+    letter-spacing: 0.01em;
+    cursor: pointer;
     border: none;
+    outline: none;
+    white-space: nowrap;
+    transition: all var(--transition-base);
+    text-decoration: none;
+}
+.button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
-.button--gray {
-    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-3xl;
-    border: 1px solid var(--color-border);
+.button--primary {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 1px 3px var(--primary-glow);
+}
+.button--primary:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 4px 14px var(--primary-glow);
+    transform: translateY(-1px);
 }
 
 .button--black {
-    @apply bg-gray-800 text-white hover:bg-gray-600 rounded-3xl;
+    background: var(--text-primary);
+    color: #fff;
+}
+.button--black:hover {
+    background: #334155;
+    transform: translateY(-1px);
+}
+
+.button--gray {
+    background: #f1f5f9;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+.button--gray:hover {
+    background: #e2e8f0;
+    border-color: var(--border-strong);
 }
 
 .button--red {
-    @apply text-red-600 hover:bg-red-600 hover:text-white rounded-3xl;
-    background-color: #fef2f2;
-    border: 1px solid #fecaca;
+    background: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
+}
+.button--red:hover {
+    background: var(--danger);
+    color: #fff;
+    border-color: var(--danger);
 }
 
-.button:disabled {
-    @apply opacity-50 cursor-not-allowed;
+.button--demo {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+.button--demo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+.button--demo:hover {
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+    transform: translateY(-1px);
+}
+.button--demo:hover::after {
+    opacity: 1;
 }
 
+/* ─── Form Elements ───────────────────────────────────────────── */
 .label {
-    @apply text-gray-600 font-semibold block uppercase text-xs mb-5 tracking-wide;
+    display: block;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
 }
 
 .input {
-    @apply w-full mt-1 px-3 py-2 rounded-lg border bg-white border-gray-200 text-gray-800 font-normal normal-case tracking-normal text-sm;
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 9px 13px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 400;
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-appearance: none;
+}
+.input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+.input::placeholder {
+    color: var(--text-muted);
 }

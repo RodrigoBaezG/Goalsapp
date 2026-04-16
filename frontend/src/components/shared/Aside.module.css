@@ -1,9 +1,90 @@
-@reference "tailwindcss";
-
-
-.aside { 
-@apply hidden md:flex flex-col text-gray-700 bg-gray-100 shadow w-60 h-full pt-2;
+.aside {
+    display: none;
+    flex-direction: column;
+    width: var(--sidebar-width);
+    height: 100%;
+    background: var(--sidebar-bg);
+    padding: 16px 10px;
+    gap: 2px;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(255,255,255,0.04);
 }
-.icon {
-    @apply h-6 mr-2;
+
+@media (min-width: 768px) {
+    .aside {
+        display: flex;
+    }
+}
+
+.sectionLabel {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #334155;
+    padding: 0 10px;
+    margin: 12px 0 6px;
+}
+
+.sectionLabel:first-child {
+    margin-top: 4px;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--sidebar-text);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.navItem:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-text-active);
+}
+
+.navItem.active {
+    background: var(--sidebar-active-bg);
+    color: var(--sidebar-text-active);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.navItem.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    background: var(--sidebar-active-border);
+    border-radius: 0 3px 3px 0;
+}
+
+.navIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+    transition: background var(--transition-fast);
+}
+
+.navItem.active .navIcon {
+    background: rgba(99, 102, 241, 0.2);
+}
+
+.navLabel {
+    flex: 1;
 }

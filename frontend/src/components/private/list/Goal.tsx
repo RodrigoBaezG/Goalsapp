@@ -14,6 +14,7 @@ function Goal({ id, icon, details, period_, events, goal, completed }: GoalProps
     const token = authState?.token?.token || localStorage.getItem('authToken');
 
     const progressPct = goal > 0 ? Math.min(Math.round((completed / goal) * 100), 100) : 0;
+    const isDone = progressPct >= 100;
 
     const handleComplete = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -31,39 +32,41 @@ function Goal({ id, icon, details, period_, events, goal, completed }: GoalProps
     };
 
     return (
-        <Link to={`/list/${id}`} className={styles.goal + " card"}>
-            <div className="flex items-center justify-center">
-                <div className={styles.icon}>{icon}</div>
-                <p className={styles.frecuency}>
-                    {events}
-                    <sub className="text-xs flex ml-2">/{period_}</sub>
-                </p>
-                <p>{details}</p>
-            </div>
-            <div className="flex items-center">
-                <div className="relative m-5 mx-8">
-                    <p className="text-center" data-testid="completed-count">
-                        {completed} of {goal}
-                    </p>
+        <Link to={`/list/${id}`} className={styles.card} data-testid="goal-card">
+            <div className={styles.icon}>{icon}</div>
+
+            <div className={styles.body}>
+                <div className={styles.title}>{details}</div>
+                <div className={styles.meta}>
+                    <span className={styles.badge}>{period_}</span>
+                    <span className={styles.events}>{events} event{events !== 1 ? 's' : ''}</span>
+                </div>
+                <div className={styles.progressTrack}>
                     <div
-                        className={styles.progressBar}
+                        className={`${styles.progressFill} ${isDone ? styles.done : ''}`}
+                        style={{ width: `${progressPct}%` }}
                         role="progressbar"
                         aria-valuenow={progressPct}
                         aria-valuemin={0}
                         aria-valuemax={100}
-                    >
-                        <div
-                            style={{ width: `${progressPct}%` }}
-                            className={styles.progress}
-                        />
-                    </div>
+                    />
+                </div>
+            </div>
+
+            <div className={styles.right}>
+                <div className={styles.counter}>
+                    <span className={styles.counterValue} data-testid="completed-count">
+                        {completed}<span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>/{goal}</span>
+                    </span>
+                    <span className={styles.counterLabel}>{progressPct}%</span>
                 </div>
                 <button
-                    className="button--gray mr-2"
+                    className={styles.completeBtn}
                     onClick={handleComplete}
                     aria-label="Mark as completed"
+                    title="Mark as completed"
                 >
-                    Completed
+                    ✓
                 </button>
             </div>
         </Link>
