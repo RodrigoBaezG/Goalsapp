@@ -5,79 +5,56 @@ var router = express.Router();
 const { body, validationResult } = require('express-validator');
 var jwt = require('jsonwebtoken');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-me';
 
-/* POST create new account */
 router.post('/signup',
-    body('username').isEmail(),
-    body('password').isLength({ min: 5 }),
+    body('username').isEmail().withMessage('Valid email required'),
+    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
     function (req, res, next) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const newAccount = req.body;
-        bcrypt.hash(newAccount.password, 12, function (err, hash) {
-            // Store hash in your password DB.
-            if (err) {
-                return next(err);
-            }
-            create('accounts', { username: newAccount.username, hash }, (err, account) => {
+        const { username, password } = req.body;
+        bcrypt.hash(password, 12, function (err, hash) {
+            if (err) return next(err);
+            create('accounts', { username, hash }, (err, account) => {
                 if (err) {
+                    if (err.code === '23505') {
+                        return res.status(409).json({ error: 'Email already in use' });
+                    }
                     return next(err);
                 }
-                let token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 15),
-                    id: account.id
-                }, 'secret');
-                res.status(200).send({ token: token });
+                const token = jwt.sign({ id: account.id }, JWT_SECRET, { expiresIn: '1h' });
+                res.status(201).json({ token });
             });
         });
-
     });
 
-/* POST Login */
 router.post('/login',
-    body('username').isEmail(),
-    body('password').isLength({ min: 5 }),
+    body('username').isEmail().withMessage('Valid email required'),
+    body('password').isLength({ min: 1 }).withMessage('Password required'),
     function (req, res, next) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const login = req.body;
-        requestAccount(login.username, (err, result) => {
-            if (err) {
-                return next(err);
-            }
-            const [account] = result || []; 
+        const { username, password } = req.body;
+        requestAccount(username, (err, result) => {
+            if (err) return next(err);
+            const [account] = result || [];
             if (!account) {
-                return res.status(401).send('Account not found');
+                return res.status(401).json({ error: 'Invalid credentials' });
             }
-            // Compare password
-            bcrypt.compare(login.password, account.hash, function (err, result) {
+            bcrypt.compare(password, account.hash, function (err, match) {
                 if (err) return next(err);
-                if (!result) return res.status(401).send('Invalid password');
-                // Passwords match
-                // Create a token
-                let token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                    id: account.id
-                }, 'secret');
-
-                res.send({ token : token });
+                if (!match) return res.status(401).json({ error: 'Invalid credentials' });
+                const token = jwt.sign({ id: account.id }, JWT_SECRET, { expiresIn: '1h' });
+                res.json({ token });
             });
         });
     });
-
-
-// function createFile(email) {
-//     let token = jwt.sign({
-//         exp: Math.floor(Date.now() / 1000) + 60,
-//         username: email
-// }, 'secret');
-// return token;
-// }
 
 module.exports = router;

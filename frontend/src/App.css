@@ -2,32 +2,46 @@
 @reference "tailwindcss";
 
 .card {
-    @apply w-4/5 pt-2 mb-5 md:w-4/5 text-gray-700 text-xs mx-4 rounded-xl shadow-[10px_10px_10px_#c5c5c5,_-5px_-5px_5px_#c5c5c5] bg-gray-50 overflow-hidden;
+    @apply w-4/5 pt-2 mb-3 md:w-4/5 text-gray-700 text-xs mx-4 rounded-xl bg-white overflow-hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
 }
 
 .button {
-    @apply flex justify-center items-center p-2 m-2 font-bold h-8 cursor-pointer shadow-[5px_5px_10px_#c5c5c5];
+    @apply inline-flex items-center justify-center gap-1 px-4 py-2 font-medium text-sm rounded-3xl cursor-pointer transition-all duration-150;
+    border: none;
 }
 
 .button--gray {
-    @apply bg-gray-200 font-bold h-8 p-2 text-gray-700 hover:bg-gray-100 rounded-3xl shadow-[5px_5px_10px_#c5c5c5,_-5px_-5px_10px_#ffffff];
+    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-3xl;
+    border: 1px solid var(--color-border);
 }
 
 .button--black {
-    @apply bg-gray-800 text-white font-bold h-8 p-2 hover:bg-gray-600 rounded-3xl;
+    @apply bg-gray-800 text-white hover:bg-gray-600 rounded-3xl;
 }
 
 .button--red {
-    @apply bg-white text-red-600 font-bold h-8 p-2 hover:bg-red-600 hover:text-white rounded-3xl border border-solid border-red-600;
+    @apply text-red-600 hover:bg-red-600 hover:text-white rounded-3xl;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.button:disabled {
+    @apply opacity-50 cursor-not-allowed;
 }
 
 .label {
-    @apply text-gray-700 font-bold block uppercase text-xs mb-6;
+    @apply text-gray-600 font-semibold block uppercase text-xs mb-5 tracking-wide;
 }
 
 .input {
-    @apply w-full p-2 rounded-3xl border bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500;
-    box-shadow:
-        inset 5px 5px 5px #bebebe,
-        inset -5px -5px 10px #ffffff;
+    @apply w-full mt-1 px-3 py-2 rounded-lg border bg-white border-gray-200 text-gray-800 font-normal normal-case tracking-normal text-sm;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }

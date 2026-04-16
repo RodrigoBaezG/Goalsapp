@@ -4,9 +4,11 @@ import { useContext } from "react";
 import { GoalsContext } from "../../../memory/Context.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { CreateGoal, DeleteGoal, UpdateGoal } from "../../../services/Goals.ts";
+import { AuthContext } from "../../../memory/Context.tsx";
 
 function Details() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [form, setForm] = useState({
         details: "",
@@ -19,6 +21,8 @@ function Details() {
     });
 
     const [state, dispatch] = useContext(GoalsContext);
+    const [authState] = useContext(AuthContext);
+    const token = authState?.token?.token || localStorage.getItem('authToken');
 
     const { details, events, period_, icon, goal, deadline, completed } = form;
 
@@ -27,95 +31,73 @@ function Details() {
     };
 
     useEffect(() => {
-        const goalMemory = state.objects[id];
         if (!id) return;
+        const goalMemory = state.objects[id];
         if (!goalMemory) {
-            return navigate("/404");
+            navigate("/404");
+            return;
         }
-        if (goalMemory.deadline && goalMemory.deadline.includes('T')) {
-            // Separa la fecha del resto de la cadena ISO (ej: "2025-10-18")
-            goalMemory.deadline = goalMemory.deadline.split('T')[0];
-        }
-        setForm(goalMemory);
+        const deadline = goalMemory.deadline?.includes('T')
+            ? goalMemory.deadline.split('T')[0]
+            : goalMemory.deadline || "";
+        setForm({ ...goalMemory, deadline });
     }, [id]);
 
     const frecuencyOptions = ["day", "week", "month", "year"];
     const iconOptions = ["📚", "💻", "🎨", "🏋️‍♂️", "💦", "✈️"];
 
-    const navigate = useNavigate();
+    const getToken = () => {
+        if (!token) {
+            navigate('/access');
+            return null;
+        }
+        return token;
+    };
 
     const crear = async () => {
-        // 1. RECUPERAR EL TOKEN (Asumiendo que ya lo guardaste en Register.jsx)
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-            // Si no hay token, redirigimos al login para evitar el error 401
-            console.error("Token de autorización no encontrado. Redirigiendo a acceso.");
-            return navigate('/access'); 
-        }
-        
+        const t = getToken();
+        if (!t) return;
         try {
-            // 2. PASAR EL TOKEN a la función CreateGoal
-            // Antes: const newGoal = await CreateGoal(form);
-            const newGoal = await CreateGoal(form, token); // <--- CAMBIO CLAVE
-            
-            dispatch({
-                type: "create_goal",
-                goal: newGoal,
-            });
+            const newGoal = await CreateGoal(form, t);
+            dispatch({ type: "create_goal", goal: newGoal });
             navigate("/list");
         } catch (error) {
-            console.error("Error al crear la meta:", error);
-            // Manejar errores de la API aquí
+            console.error("Error creating goal:", error);
         }
     };
 
-    const cancel = () => {
-        navigate("/list");
-    };
+    const cancel = () => navigate("/list");
 
     const update = async () => {
-        // 1. RECUPERAR EL TOKEN
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-            console.error("Token de autorización no encontrado. Redirigiendo a acceso.");
-            return navigate('/access'); 
-        }
-
+        const t = getToken();
+        if (!t) return;
         try {
-            // 2. PASAR EL TOKEN
-            const updatedGoal = await UpdateGoal(form, token); // <-- CAMBIO CLAVE
+            const updatedGoal = await UpdateGoal(form, t);
             dispatch({ type: "update", goal: updatedGoal });
             navigate("/list");
         } catch (error) {
-            console.error("Error al actualizar la meta:", error);
+            console.error("Error updating goal:", error);
         }
     };
 
     const deleteGoal = async () => {
-        // 1. RECUPERAR EL TOKEN
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-            console.error("Token de autorización no encontrado. Redirigiendo a acceso.");
-            return navigate('/access'); 
-        }
-
+        const t = getToken();
+        if (!t) return;
         try {
-            // 2. PASAR EL TOKEN
-            await DeleteGoal(form.id, token); // <-- CAMBIO CLAVE
+            await DeleteGoal(form.id, t);
             dispatch({ type: "delete", id: form.id });
             navigate("/list");
         } catch (error) {
-            console.error("Error al eliminar la meta:", error);
+            console.error("Error deleting goal:", error);
         }
     };
 
+    const isValid = details.length >= 5 && period_.length > 0;
+
     return (
-            <div className={DetailsCss.content}>
-                <div className=" card ">
-                    <form className="m-3">
+        <div className={DetailsCss.content}>
+            <div className="card">
+                <form className="m-3">
                     <label className="label">
                         Details
                         <input
@@ -136,33 +118,33 @@ function Details() {
                         />
                     </label>
                     <label className="label">
-                        Frecuency
+                        Frequency
                         <select
                             value={period_}
                             className="input"
                             onChange={(e) => onChange(e, "period_")}
                         >
                             {frecuencyOptions.map((period) => (
-                                <option key={period} value={period}>
-                                    {period}
-                                </option>
+                                <option key={period} value={period}>{period}</option>
                             ))}
                         </select>
                     </label>
                     <label className="label">
-                        Events
+                        Events per period
                         <input
                             className="input"
                             type="number"
+                            min="1"
                             value={events}
                             onChange={(e) => onChange(e, "events")}
                         />
                     </label>
                     <label className="label">
-                        Goal
+                        Goal (total)
                         <input
                             className="input"
                             type="number"
+                            min="1"
                             value={goal}
                             onChange={(e) => onChange(e, "goal")}
                         />
@@ -172,33 +154,32 @@ function Details() {
                         <input
                             className="input"
                             type="number"
+                            min="0"
                             value={completed}
                             onChange={(e) => onChange(e, "completed")}
                         />
                     </label>
                     <label className="label">
-                        Choose an icon for your goal
+                        Icon
                         <select
                             value={icon}
                             className="input"
                             onChange={(e) => onChange(e, "icon")}
                         >
                             {iconOptions.map((icon) => (
-                                <option key={icon} value={icon}>
-                                    {icon}
-                                </option>
+                                <option key={icon} value={icon}>{icon}</option>
                             ))}
                         </select>
                     </label>
                 </form>
                 <div className={DetailsCss.buttons}>
                     {!id && (
-                        <button className="button button--black" onClick={crear}>
+                        <button className="button button--black" onClick={crear} disabled={!isValid}>
                             Create
                         </button>
                     )}
                     {id && (
-                        <button className="button button--black" onClick={update}>
+                        <button className="button button--black" onClick={update} disabled={!isValid}>
                             Update
                         </button>
                     )}
@@ -211,8 +192,8 @@ function Details() {
                         Cancel
                     </button>
                 </div>
-                </div>
             </div>
+        </div>
     );
 }
 
