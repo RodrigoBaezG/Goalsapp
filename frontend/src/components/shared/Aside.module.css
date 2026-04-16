@@ -1,0 +1,9 @@
+@reference "tailwindcss";
+
+
+.aside { 
+@apply hidden md:flex flex-col text-gray-700 bg-gray-100 shadow w-60 h-full pt-2;
+}
+.icon {
+    @apply h-6 mr-2;
+}

@@ -1,0 +1,12 @@
+@reference "tailwindcss";
+
+.buttons {
+    @apply flex justify-between p-2 bg-gradient-to-r from-gray-700 via-gray-200 to-gray-200 px-4 rounded-b-xl;
+}
+
+/* 1. Contenedor principal de la tarjeta (.content) */
+.content {
+    /* Usamos flexbox en columna para separar el formulario y los botones */
+    @apply flex flex-col w-4/5 my-4 items-center; 
+}
+

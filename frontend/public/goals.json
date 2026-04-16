@@ -1,0 +1,32 @@
+[
+    {
+        "id": "1",
+        "icon": "📚",
+        "details": "Learn React",
+        "period": "week",
+        "events": 4,
+        "goal": 10,
+        "deadline": "",
+        "completed": 3
+    },
+    {
+        "id": "2",
+        "icon": "📚",
+        "details": "Learn React",
+        "period": "week",
+        "events": 4,
+        "goal": 10,
+        "deadline": "",
+        "completed": 3
+    },
+    {
+        "id": "3",
+        "icon": "📚",
+        "details": "Learn React",
+        "period": "week",
+        "events": 4,
+        "goal": 10,
+        "deadline": "",
+        "completed": 3
+    }
+]

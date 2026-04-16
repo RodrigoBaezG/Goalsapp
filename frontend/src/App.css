@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@reference "tailwindcss";
+
+.card {
+    @apply w-4/5 pt-2 mb-5 md:w-4/5 text-gray-700 text-xs mx-4 rounded-xl shadow-[10px_10px_10px_#c5c5c5,_-5px_-5px_5px_#c5c5c5] bg-gray-50 overflow-hidden;
+}
+
+.button {
+    @apply flex justify-center items-center p-2 m-2 font-bold h-8 cursor-pointer shadow-[5px_5px_10px_#c5c5c5];
+}
+
+.button--gray {
+    @apply bg-gray-200 font-bold h-8 p-2 text-gray-700 hover:bg-gray-100 rounded-3xl shadow-[5px_5px_10px_#c5c5c5,_-5px_-5px_10px_#ffffff];
+}
+
+.button--black {
+    @apply bg-gray-800 text-white font-bold h-8 p-2 hover:bg-gray-600 rounded-3xl;
+}
+
+.button--red {
+    @apply bg-white text-red-600 font-bold h-8 p-2 hover:bg-red-600 hover:text-white rounded-3xl border border-solid border-red-600;
+}
+
+.label {
+    @apply text-gray-700 font-bold block uppercase text-xs mb-6;
+}
+
+.input {
+    @apply w-full p-2 rounded-3xl border bg-white border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500;
+    box-shadow:
+        inset 5px 5px 5px #bebebe,
+        inset -5px -5px 10px #ffffff;
+}

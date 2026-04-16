@@ -1,0 +1,21 @@
+@reference "tailwindcss";
+
+.header {
+    @apply h-14 flex justify-between items-center shadow bg-white text-gray-700 relative;
+}
+
+.titleContainer {
+    @apply flex items-center pl-4;
+}
+
+.title {
+    @apply ml-2 flex uppercase font-semibold text-gray-800;
+}
+
+.icon {
+    @apply h-8;
+}
+
+.logout {
+    @apply cursor-pointer hover:text-red-600;
+}

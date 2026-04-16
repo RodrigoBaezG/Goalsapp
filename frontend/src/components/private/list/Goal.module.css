@@ -1,0 +1,30 @@
+@reference "tailwindcss";
+
+.goal {
+    @apply flex h-14 p-2 m-2 justify-between items-center;
+}
+
+.scrollableForm {
+    /* flex-grow: 1: Permite que el formulario ocupe el espacio restante dentro de .content */
+    @apply flex-grow p-4;
+    /* overflow-y: auto: Muestra la barra de desplazamiento solo si el contenido se desborda */
+}
+
+.icon {
+    @apply flex items-center justify-center h-10 w-10 m-2 rounded-3xl bg-gray-100 text-2xl;
+    box-shadow:
+        inset 5px 5px 10px #bebebe,
+        inset -5px -5px 10px #ffffff;
+}
+
+.frecuency {
+    @apply ml-3 text-xl mr-5 flex text-gray-500 justify-center items-center;
+}
+
+.progressBar {
+    @apply w-13 h-1 rounded bg-gray-300;
+}
+
+.progress {
+    @apply h-1 rounded bg-gradient-to-l from-green-200 to-blue-500;
+}

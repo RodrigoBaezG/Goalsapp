@@ -1,0 +1,5 @@
+@reference "tailwindcss";
+
+.footer {
+    @apply flex shadow justify-end items-center h-8 bg-gradient-to-r from-pink-400 to-purple-500 bg-gray-100 text-white relative;
+}
