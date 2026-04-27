@@ -3,8 +3,9 @@ import Credentials from "../../shared/Credentials.tsx";
 import { AuthContext } from "../../../memory/Context.tsx";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../../services/Auth.ts";
+import { DEMO_USERNAME, setDemoMode } from "../../../services/demo.ts";
 
-const DEMO_CREDENTIALS = { username: 'example@gmail.com', password: '12345' };
+const DEMO_CREDENTIALS = { username: DEMO_USERNAME, password: '12345' };
 
 function Access() {
     const navigate = useNavigate();
@@ -13,8 +14,13 @@ function Access() {
 
     const loginDispatch = async (form) => {
         setError(null);
+        const isDemo = form.username === DEMO_USERNAME;
         try {
-            const tokenObject = await login(form);
+            const tokenObject = isDemo
+                ? { token: 'demo-token' }
+                : await login(form);
+            if (isDemo) setDemoMode(true);
+            else setDemoMode(false);
             localStorage.setItem('authToken', tokenObject.token);
             authDispatch({ type: 'add', token: tokenObject });
             navigate('/list');

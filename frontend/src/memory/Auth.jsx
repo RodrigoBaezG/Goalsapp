@@ -1,6 +1,7 @@
 import { useReducer } from "react";
 import { AuthContext } from "./Context.tsx";
 import { useEffect } from "react";
+import { setDemoMode } from "../services/demo.ts";
 
 const storedToken = localStorage.getItem("authToken");
 
@@ -29,6 +30,7 @@ function reducer(state, action) {
         case "logout": {
             console.log("Removing token");
             localStorage.removeItem("authToken");
+            setDemoMode(false);
             return { token: null, authenticate: false };
         }
 

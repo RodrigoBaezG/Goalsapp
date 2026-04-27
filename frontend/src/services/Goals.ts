@@ -1,10 +1,18 @@
 import type { GoalType } from "../types/Goal.ts";
 import API_BASE_URL from '../config.js';
+import {
+    isDemoMode,
+    getDemoGoals,
+    createDemoGoal,
+    updateDemoGoal,
+    deleteDemoGoal,
+} from "./demo.ts";
 
 export async function RequestGoals(token: string) : Promise<GoalType[]> {
     if (!token) {
         throw new Error("Authentication token is required.");
     }
+    if (isDemoMode()) return getDemoGoals();
     const response = await fetch(`${API_BASE_URL}/api/goals`, {
         method: 'GET',
         headers: {
@@ -36,8 +44,9 @@ export async function RequestGoal(id: number): Promise<GoalType> {
 
 export async function CreateGoal(goal: GoalType, token: string): Promise<GoalType> {
     if (!token) {
-        throw new Error("No authorization token was found"); 
+        throw new Error("No authorization token was found");
     }
+    if (isDemoMode()) return createDemoGoal(goal);
     const response = await fetch(`${API_BASE_URL}/api/goals`, {
         method: "POST",
         body: JSON.stringify(goal),
@@ -62,8 +71,9 @@ export async function CreateGoal(goal: GoalType, token: string): Promise<GoalTyp
 
 export async function UpdateGoal(goal: GoalType, token: string): Promise<GoalType> {
     if (!token) {
-        throw new Error("Authorization token is required to update a goal."); 
+        throw new Error("Authorization token is required to update a goal.");
     }
+    if (isDemoMode()) return updateDemoGoal(goal);
     const response = await fetch(`${API_BASE_URL}/api/goals/${goal.id}`, {
         method: "PUT", // O PATCH, dependiendo de tu backend
         body: JSON.stringify(goal),
@@ -80,8 +90,9 @@ export async function UpdateGoal(goal: GoalType, token: string): Promise<GoalTyp
 
 export async function DeleteGoal(id: number, token: string): Promise<void> {
     if (!token) {
-        throw new Error("Authorization token is required to delete a goal."); 
+        throw new Error("Authorization token is required to delete a goal.");
     }
+    if (isDemoMode()) { await deleteDemoGoal(id); return; }
     const response = await fetch(`${API_BASE_URL}/api/goals/${id}`, {
         method: "DELETE",
         headers: {
